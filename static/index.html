@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Content Material Engine — Generator Materi & Prompt Wan2GP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo-area">
+        <div class="logo-icon">🎬</div>
+        <div>
+          <h1 class="logo-title">AI Content Engine</h1>
+          <p class="logo-subtitle">Mesin Pembuat Materi Video & Master Prompt Sheet (Wan2GP & RunPod)</p>
+        </div>
+      </div>
+      <div class="header-badges">
+        <a href="http://localhost:7861" target="_blank" class="badge-link pulse">
+          <span class="status-dot green"></span>
+          <span>Wan2GP Launcher (Port 7861)</span>
+        </a>
+        <div class="badge">
+          <span class="status-dot cyan"></span>
+          <span>Engine v1.0 Active</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Input Panel -->
+      <section class="card input-card">
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="tab-presets">
+            <span class="tab-icon">⚡</span>
+            <span>Preset Format Viral</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-url">
+            <span class="tab-icon">🔍</span>
+            <span>Bedah Video URL (Reels/TikTok/YT)</span>
+          </button>
+          <button class="tab-btn" data-tab="tab-custom">
+            <span class="tab-icon">💡</span>
+            <span>Buat dari Ide / Script Baru</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: Presets -->
+        <div id="tab-presets" class="tab-pane active">
+          <p class="tab-desc">Pilih template struktur video viral yang sudah teruji untuk langsung memuat seluruh prompt, timecode, audio cue, dan catatan editing.</p>
+          <div class="presets-grid" id="presets-container">
+            <div class="loading-spinner">Memuat preset viral...</div>
+          </div>
+        </div>
+
+        <!-- Tab 2: URL Analyzer -->
+        <div id="tab-url" class="tab-pane">
+          <p class="tab-desc">Masukkan tautan video Instagram Reels, TikTok, atau YouTube Shorts. Engine akan mendownload video, transkripsi suara dengan Whisper, deteksi perpindahan kamera secara presisi, ekstrak keyframe per adegan, dan membedah prompt Wan2GP.</p>
+          <div class="url-input-group">
+            <input type="text" id="url-input" class="input-field" placeholder="https://www.instagram.com/reels/... atau https://vt.tiktok.com/..." />
+            <button id="btn-analyze-url" class="btn btn-primary">
+              <span>Bedah Video Sekarang</span>
+            </button>
+          </div>
+
+          <!-- Precision Scene Detection Settings -->
+          <div class="url-settings-panel" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin-top: 14px; padding: 14px 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px;">🎯 Mode Deteksi Scene</label>
+              <select id="detection-mode" class="input-field select-field" style="padding: 10px 14px; font-size: 13px; width: 100%;">
+                <option value="smart" selected>🔥 Presisi Cerdas (Visual Cut + Jeda Suara Whisper)</option>
+                <option value="visual_cut">✂️ Strict Visual Cut (Sesuai Ganti Sudut Kamera)</option>
+                <option value="speech_beat">🎙️ Dialogue & Speech Beat (Per Kalimat Whisper)</option>
+                <option value="fixed">⏱️ Rata / Fixed Interval (3s - 5s)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px;">⚡ Target Durasi Maks per Scene (Wan2GP)</label>
+              <select id="max-duration" class="input-field select-field" style="padding: 10px 14px; font-size: 13px; width: 100%;">
+                <option value="4.0">3 - 4 Detik (Sangat Rekomendasi Wan 2.1 1.3B / 49 Frames)</option>
+                <option value="5.0" selected>4 - 5 Detik (Standar Wan2GP / 81 Frames)</option>
+                <option value="7.0">6 - 7 Detik (Scene Panjang / RunPod 14B)</option>
+                <option value="0">Tanpa Batas (Sesuai Asli Kamera)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label style="display: block; font-size: 12px; font-weight: 600; color: #94a3b8; margin-bottom: 6px;">👥 Bedah Percakapan (Speaker Diarization)</label>
+              <select id="num-speakers" class="input-field select-field" style="padding: 10px 14px; font-size: 13px; width: 100%;">
+                <option value="0">🤖 Otomatis (Auto-Detect)</option>
+                <option value="2">👥 2 Karakter (Dialog A & B)</option>
+                <option value="3" selected>👨‍👩‍👧 3 Karakter (Dialog A, B, C)</option>
+                <option value="4">🎭 4 Karakter</option>
+              </select>
+            </div>
+          </div>
+
+          <label style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:12px;color:#94a3b8;cursor:pointer;">
+            <input type="checkbox" id="force-refresh" /> 🔄 Paksa analisis ulang (abaikan hasil tersimpan)
+          </label>
+
+          <div id="url-status" class="status-box hidden" style="margin-top: 14px;"></div>
+
+          <!-- Saved History -->
+          <div style="margin-top:22px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <h3 style="font-size:14px;font-weight:700;color:#e2e8f0;">📁 Riwayat Bedah Video Tersimpan</h3>
+              <button id="btn-refresh-history" class="btn-copy">↻ Muat Ulang</button>
+            </div>
+            <div id="history-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;">
+              <div style="color:#64748b;font-size:13px;">Memuat riwayat...</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Custom Idea Generator -->
+        <div id="tab-custom" class="tab-pane">
+          <p class="tab-desc">Punya ide konten atau naskah sendiri? Engine akan menyusunnya menjadi Production Storyboard 3 adegan lengkap dengan prompt Wan2GP.</p>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Judul Proyek</label>
+              <input type="text" id="custom-title" class="input-field" placeholder="Contoh: Kucing Barista di Braga Bandung" />
+            </div>
+            <div class="form-group">
+              <label>Gaya Visual (Style)</label>
+              <select id="custom-style" class="input-field select-field">
+                <option value="Photorealistic 8k Cinematic">Photorealistic 8K Sinematik</option>
+                <option value="3D Pixar Disney Style">3D Pixar / Disney Animation</option>
+                <option value="Studio Ghibli Anime">Anime / Studio Ghibli Style</option>
+                <option value="Dark Fantasy Unreal Engine 5">Dark Fantasy Cinematic UE5</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Konsep / Naskah Cerita Singkat</label>
+              <textarea id="custom-concept" class="input-field textarea-field" rows="3" placeholder="Jelaskan apa yang terjadi dalam video, siapa karakternya, aksinya, dan pesan utamanya..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Target Engine Video</label>
+              <select id="custom-model" class="input-field select-field">
+                <option value="Wan 2.1 1.3B (Local OK - 8GB VRAM)">Wan 2.1 1.3B Lokal (RTX 3070 8GB)</option>
+                <option value="Wan 2.1 14B / RunPod Cloud">Wan 2.1 / 2.2 14B (RunPod Cloud)</option>
+              </select>
+            </div>
+            <div class="form-group form-actions">
+              <button id="btn-generate-concept" class="btn btn-primary">
+                <span>⚡ Susun Master Storyboard</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Output Panel: Production Storyboard Sheet -->
+      <section id="output-section" class="card output-card hidden">
+        <div class="output-header">
+          <div>
+            <div class="badge-tag" id="storyboard-category">KATEGORI KONTEN</div>
+            <h2 class="output-title" id="storyboard-title">Production Storyboard Sheet</h2>
+            <div class="meta-row">
+              <span id="storyboard-model" class="meta-pill">🎯 Model: Wan 2.1</span>
+              <span id="storyboard-resolution" class="meta-pill">📐 480x848 (9:16)</span>
+              <span id="storyboard-scenes-count" class="meta-pill">🎬 3 Adegan</span>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button id="btn-copy-wan2gp-batch" class="btn btn-primary" title="Salin semua motion prompt dengan format siap pakai di Wan2GP (dipisahkan baris kosong)">
+              <span>⚡ Salin Batch Wan2GP</span>
+            </button>
+            <button id="btn-export-comfyui" class="btn btn-accent" style="background: linear-gradient(135deg, #10b981, #059669); border-color: #34d399;" title="Download ComfyUI Workflow Resmi Wan 14B I2V siap drag & drop">
+              <span>🎛️ Unduh ComfyUI Workflow (.json)</span>
+            </button>
+            <button id="btn-export-runpod" class="btn btn-secondary">
+              <span>📦 Export RunPod Batch (.zip)</span>
+            </button>
+            <button id="btn-copy-all" class="btn btn-secondary">
+              <span>📋 Salin Catatan Storyboard</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Strategy & Tool Recommendation Box (NEW) -->
+        <div id="strategy-section" class="strategy-box" style="margin-bottom: 24px; background: linear-gradient(135deg, rgba(30, 41, 59, 0.85), rgba(15, 23, 42, 0.95)); border: 1px solid rgba(0, 242, 254, 0.35); border-radius: 14px; padding: 20px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);">
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 12px; margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 24px;">🎯</span>
+              <div>
+                <h3 style="font-size: 16px; font-weight: 800; color: #38bdf8; margin: 0; letter-spacing: -0.3px;">Rekomendasi Alur & Tool Eksekusi (Agar 100% Mirip)</h3>
+                <p style="font-size: 12px; color: #94a3b8; margin: 2px 0 0 0;">Analisa otomatis metode terbaik untuk mereplikasi video referensi tanpa kehilangan identitas karakter & visual.</p>
+              </div>
+            </div>
+            <span id="strategy-badge" style="background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #34d399; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px;">
+              ⭐ Rekomendasi: I2V (Image-to-Video)
+            </span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
+            <!-- Column 1: Metodologi -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 14px;">
+              <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #f8fafc; font-size: 13px; margin-bottom: 8px;">
+                <span>🔬 1. Metode Eksekusi</span>
+              </div>
+              <div style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+                <p style="margin: 0 0 6px 0;"><strong style="color: #38bdf8;">Wajib Pakai I2V (Image-to-Video):</strong> Jangan gunakan Text-to-Video jika ingin subjek sama persis.</p>
+                <p style="margin: 0; color: #94a3b8;">Unduh gambar adegan awal lewat tombol <em>"💾 Unduh Gambar Ref"</em> di Adegan #1 sebagai <strong>First Frame</strong> agar proporsi, warna bulu/kulit, dan sudut ruang tidak berubah.</p>
+              </div>
+            </div>
+
+            <!-- Column 2: Tool Video Utama -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 14px;">
+              <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #f8fafc; font-size: 13px; margin-bottom: 8px;">
+                <span>🎥 2. Model Video Rekomendasi</span>
+              </div>
+              <div style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+                <p style="margin: 0 0 6px 0;"><strong style="color: #4ade80;">Wan 2.1 I2V 14B (Wan2GP / RunPod):</strong> Preservasi identitas gambar tertinggi dan fisika gerakan stabil.</p>
+                <p style="margin: 0; color: #94a3b8;">Jika lokal RTX 3070 8GB, gunakan <strong>Wan 2.1 1.3B I2V</strong> (durasi 3-4 detik). Untuk gerakan ekspresi ekstrem, alternatif cloud: <strong>Kling AI 1.5 I2V</strong>.</p>
+              </div>
+            </div>
+
+            <!-- Column 3: Audio & Lip-sync -->
+            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 10px; padding: 14px;">
+              <div style="display: flex; align-items: center; gap: 6px; font-weight: 700; color: #f8fafc; font-size: 13px; margin-bottom: 8px;">
+                <span>🗣️ 3. Suara & Lip-Sync Tool</span>
+              </div>
+              <div style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">
+                <p style="margin: 0 0 6px 0;"><strong style="color: #fbbf24;">Voiceover:</strong> Salin naskah dialog di bawah ke <strong>ElevenLabs</strong> (voice cloning / preset karakter lucu).</p>
+                <p style="margin: 0; color: #94a3b8;"><strong style="color: #f472b6;">Sinkronisasi Mulut:</strong> Gunakan <strong>LivePortrait</strong> atau <strong>SadTalker / MuseTalk</strong> untuk menyatukan klip video Wan2GP dengan audio suara.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dialogue Script Section (Bedah Percakapan) -->
+        <div id="dialogue-section" class="dialogue-box hidden" style="margin-bottom: 24px; background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 12px; padding: 18px 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 18px;">💬</span>
+              <h3 style="font-size: 15px; font-weight: 700; color: #38bdf8; margin: 0;">Bedah Percakapan & Naskah Karakter (TTS / Lip-Sync)</h3>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="font-size: 12px; color: #94a3b8;">Ubah Pembicara:</span>
+              <select id="re-diarize-speakers" class="input-field select-field" style="padding: 4px 8px; font-size: 12px; height: 32px; width: 110px;">
+                <option value="0">🤖 Auto</option>
+                <option value="2">2 Karakter</option>
+                <option value="3" selected>3 Karakter</option>
+                <option value="4">4 Karakter</option>
+              </select>
+              <button id="btn-re-diarize" class="btn-copy" style="padding: 6px 12px; font-size: 11px;">🔄 Proses Ulang</button>
+              <button id="btn-copy-dialogue" class="btn-copy" style="padding: 6px 12px; font-size: 11px;">📋 Salin Naskah</button>
+              <button id="btn-download-srt" class="btn-copy" style="padding: 6px 12px; font-size: 11px;">⬇️ Unduh .SRT</button>
+            </div>
+          </div>
+
+          <!-- Character Speaker Summary Chips -->
+          <div id="speakers-tags" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px;"></div>
+
+          <!-- Dialogue Lines Container -->
+          <div id="dialogue-lines-container" style="display: flex; flex-direction: column; gap: 8px; max-height: 420px; overflow-y: auto; padding-right: 6px;"></div>
+        </div>
+
+        <!-- Transcription Banner (if available) -->
+        <div id="transcript-banner" class="transcript-box hidden">
+          <div class="transcript-title">🎙️ Hasil Transkripsi Suara (Whisper AI):</div>
+          <div id="transcript-text" class="transcript-content"></div>
+        </div>
+
+        <!-- Storyboard Scene Cards Container -->
+        <div id="scenes-container" class="scenes-list">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div>AI Content Material Engine — Siap digunakan dengan <strong>Wan2GP (Port 7861)</strong> dan <strong>RunPod Cloud GPU</strong>.</div>
+    </footer>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden">Prompt berhasil disalin ke clipboard!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>

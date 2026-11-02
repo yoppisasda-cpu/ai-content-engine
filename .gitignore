@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.venv/
+env/
+env_uv/
+
+# Large Model weights & Diarization ONNX models (very large binaries)
+models/
+*.onnx
+*.safetensors
+*.bin
+*.pth
+*.pt
+
+# Media, Cache, & Large Video Assets
+references/*.mp4
+references/*.mkv
+references/*.webm
+videos/*.mp4
+videos/*.avi
+exports/*.zip
+images/saved/
+storyboards/*.json
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,18 @@
+{
+  "project_title": "Kucing Barista",
+  "model_target": "Wan 2.1 14B",
+  "resolution": "720x1280",
+  "jobs": [
+    {
+      "scene_num": 1,
+      "timecode": "",
+      "shot_type": "Hook",
+      "image_prompt": "cat barista",
+      "motion_prompt": "pouring milk",
+      "negative_prompt": "",
+      "duration": "5s",
+      "audio_sfx": "",
+      "editing_notes": ""
+    }
+  ]
+}
